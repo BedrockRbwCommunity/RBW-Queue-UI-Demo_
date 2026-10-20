@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08111f">
+<title>RBW Queue UI — JSON UI Concept by Zack</title>
+<style>
+  :root{--bg:#08111f;--panel:#101d30;--panel2:#14243a;--line:#263a55;--cyan:#48e5ff;--blue:#4c7dff;--green:#54f0a0;--text:#f4f8ff;--muted:#9bb0ca;--gold:#ffd66b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(ellipse at top,#18345b 0%,var(--bg) 55%);color:var(--text);min-height:100vh}
+  .wrap{width:min(1100px,92%);margin:auto}
+  header{padding:24px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #ffffff14}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.08em}
+  .logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#06101d;font-weight:1000;box-shadow:0 0 28px #48e5ff35}
+  .tag{font-size:12px;color:var(--cyan);border:1px solid #48e5ff55;background:#48e5ff0d;border-radius:999px;padding:8px 12px}
+  .hero{padding:54px 0 34px;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+  .eyebrow{color:var(--cyan);font-size:12px;letter-spacing:.2em;font-weight:800;text-transform:uppercase}
+  h1{font-size:clamp(36px,5vw,58px);line-height:1.03;margin:14px 0}
+  h1 span{color:var(--cyan)}
+  .intro{color:var(--muted);line-height:1.7;max-width:520px}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}
+  .pill{background:#ffffff0a;border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12px;color:#d7e7fb}
+  .note{font-size:12px;color:#8da4c0;line-height:1.6}
+  .game-frame{background:#07101c;border:1px solid #45617e;border-radius:18px;padding:16px;box-shadow:0 24px 70px #0008;position:relative;overflow:hidden}
+  .frame-top{display:flex;justify-content:space-between;align-items:center;color:#a8bad0;font-size:11px;letter-spacing:.12em;margin-bottom:14px}
+  .screen{aspect-ratio:16/10;position:relative;overflow:hidden;border-radius:10px;border:1px solid #38516b;background:linear-gradient(160deg,#23486b,#10253b 48%,#091522);padding:16px}
+  .pixel-sun{position:absolute;width:80px;height:80px;background:#ffd66b;opacity:.85;right:12%;top:13%;box-shadow:0 0 50px #ffd66b55}
+  .block{position:absolute;bottom:0;height:34%;width:100%;left:0;background:linear-gradient(90deg,#183f50 0 18%,#1b5261 18% 36%,#15394e 36% 58%,#205367 58% 78%,#15364a 78%);clip-path:polygon(0 35%,12% 35%,12% 0,28% 0,28% 42%,44% 42%,44% 10%,61% 10%,61% 48%,78% 48%,78% 18%,100% 18%,100% 100%,0 100%)}
+  .hud{position:relative;z-index:2;width:min(235px,80%);background:#050a12d9;border:1px solid #48e5ff9c;border-left:3px solid var(--cyan);padding:12px 13px;box-shadow:0 8px 25px #0006}
+  .hud-title{font-weight:900;font-size:12px;letter-spacing:.08em;margin-bottom:10px}
+  .hud-row{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:#b6cbe1;padding:6px 0;border-top:1px solid #ffffff16}
+  .hud-row strong{color:#fff}
+  .status{color:var(--green)!important}
+  .screen-label{position:absolute;right:12px;bottom:12px;z-index:3;color:#e5f2ff;background:#06101dcc;padding:7px 9px;border-radius:6px;font-size:10px;letter-spacing:.08em}
+  .hotbar{position:absolute;z-index:3;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:3px}
+  .slot{width:23px;height:23px;background:#111a27c9;border:1px solid #91a5bb88}
+  .slot.active{border:2px solid #fff;background:#34536a}
+  .section{padding:24px 0 48px}
+  .section h2{font-size:22px;margin-bottom:8px}
+  .section-sub{color:var(--muted);margin-top:0;line-height:1.6}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+  .card{background:linear-gradient(145deg,#122239,#0d192a);border:1px solid var(--line);border-radius:13px;padding:20px}
+  .icon{font-size:23px}
+  .card h3{font-size:15px;margin:12px 0 7px}
+  .card p{font-size:13px;color:var(--muted);line-height:1.65;margin:0}
+  .footer{border-top:1px solid #ffffff16;padding:22px 0 30px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#8fa5c0;font-size:12px}
+  .footer strong{color:#dceaff}
+  @media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:38px}.cards{grid-template-columns:1fr}.tag{display:none}.game-frame{max-width:560px;width:100%;margin:auto}header{padding:18px 0}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <div class="brand"><div class="logo">R</div><div>RBW <span style="color:var(--cyan)">UI LAB</span></div></div>
+  <div class="tag">BEDROCK UI CONCEPT · PORTFOLIO DEMO</div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Minecraft Bedrock · UI Concept</div>
+      <h1>Ranked Bedwars<br><span>Queue HUD</span></h1>
+      <p class="intro">A clean, competitive-style interface concept for a Ranked Bedwars server. Designed around quick status reading, team queue information, and a compact in-game HUD layout.</p>
+      <div class="pills"><span class="pill">JSON UI concept</span><span class="pill">HUD layout</span><span class="pill">3v3 / 4v4</span><span class="pill">Responsive showcase</span></div>
+      <p class="note">Portfolio prototype by <strong style="color:#e7f4ff">Zack</strong>. This page is a visual showcase, not a live Minecraft UI or connected queue system.</p>
+    </div>
+    <div class="game-frame">
+      <div class="frame-top"><span>IN-GAME HUD PREVIEW</span><span>RBW / CONCEPT 01</span></div>
+      <div class="screen">
+        <div class="pixel-sun"></div><div class="block"></div>
+        <div class="hud">
+          <div class="hud-title">✦ RANKED BEDWARS</div>
+          <div class="hud-row"><span>QUEUE MODE</span><strong>3v3 / 4v4</strong></div>
+          <div class="hud-row"><span>YOUR STATUS</span><strong class="status">● READY</strong></div>
+          <div class="hud-row"><span>REGION</span><strong>ASIA</strong></div>
+          <div class="hud-row"><span>PARTY</span><strong>1 PLAYER</strong></div>
+        </div>
+        <div class="screen-label">UI MOCKUP · NOT LIVE</div>
+        <div class="hotbar"><div class="slot"></div><div class="slot active"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="eyebrow">Project overview</div>
+    <h2>Designed for competitive play</h2>
+    <p class="section-sub">A small concept project demonstrating UI layout thinking and a clear, consistent visual style.</p>
+    <div class="cards">
+      <article class="card"><div class="icon">🎨</div><h3>Compact HUD</h3><p>A compact panel keeps the queue mode and player status easy to scan without taking over the screen.</p></article>
+      <article class="card"><div class="icon">⚔️</div><h3>Ranked Modes</h3><p>Shows a sample 3v3 / 4v4 mode, region, and party status for a Bedwars-style queue experience.</p></article>
+      <article class="card"><div class="icon">🧩</div><h3>Developer Prototype</h3><p>Built as a single-file HTML portfolio preview. The actual Bedrock JSON UI implementation would require resource-pack files and in-game testing.</p></article>
+    </div>
+  </section>
+</main>
+<footer class="wrap footer"><span><strong>RBW UI LAB</strong> · Minecraft Bedrock UI concept</span><span>Created by Zack · Portfolio prototype</span></footer>
+</body>
+</html>
